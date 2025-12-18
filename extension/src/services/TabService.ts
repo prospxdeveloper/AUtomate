@@ -6,8 +6,8 @@ import { storageService } from './StorageService';
  * TabService - Handles all tab-related operations
  */
 export class TabService {
-  async getAllTabs(): Promise<Tab[]> {
-    const chromeTabs = await chrome.tabs.query({});
+  async getAllTabs(query: chrome.tabs.QueryInfo = {}): Promise<Tab[]> {
+    const chromeTabs = await chrome.tabs.query(query);
     return chromeTabs.map(tab => ({
       id: tab.id!,
       url: tab.url || '',
@@ -32,16 +32,19 @@ export class TabService {
     // Get tabs to categorize
     let tabs: Tab[];
     if (tabIds && tabIds.length > 0) {
-      const allTabs = await this.getAllTabs();
+      const allTabs = await this.getAllTabs({ currentWindow: true });
       tabs = allTabs.filter(tab => tabIds.includes(tab.id));
     } else {
-      tabs = await this.getAllTabs();
+      // Physically grouping across multiple windows is surprising; keep this scoped.
+      tabs = await this.getAllTabs({ currentWindow: true });
     }
 
     // Check cache first
     const cacheKey = `tab-categories-${tabs.map(t => t.id).join('-')}`;
     const cached = await storageService.getCache<TabCategorizationResult[]>(cacheKey);
     if (cached) {
+      // Apply groups even when the categorization is cached.
+      await this.applyChromeTabGroups(cached);
       return cached;
     }
 
@@ -55,12 +58,16 @@ export class TabService {
       // Cache results for 1 hour
       await storageService.setCache(cacheKey, results, 3600);
 
+      await this.applyChromeTabGroups(results);
+
       return results;
     } catch (error) {
       console.error('Failed to categorize tabs via API, falling back to local:', error);
       
       // Fallback: local categorization
-      return this.categorizeTabsLocally(tabs);
+      const results = await this.categorizeTabsLocally(tabs);
+      await this.applyChromeTabGroups(results);
+      return results;
     }
   }
 
@@ -115,28 +122,152 @@ export class TabService {
     return 'Other';
   }
 
+  private isTabGroupsSupported(): boolean {
+    return Boolean(
+      chrome?.tabs?.group &&
+        chrome?.tabGroups &&
+        typeof chrome.tabs.group === 'function' &&
+        typeof chrome.tabGroups.update === 'function'
+    );
+  }
+
+  private tabGroupColorForCategory(category: string): chrome.tabGroups.ColorEnum {
+    const colors: chrome.tabGroups.ColorEnum[] = [
+      'blue',
+      'red',
+      'yellow',
+      'green',
+      'pink',
+      'purple',
+      'cyan',
+      'orange',
+      'grey',
+    ];
+
+    // Deterministic hash
+    let hash = 0;
+    for (let i = 0; i < category.length; i++) {
+      hash = (hash * 31 + category.charCodeAt(i)) >>> 0;
+    }
+    return colors[hash % colors.length];
+  }
+
+  private async applyChromeTabGroups(results: TabCategorizationResult[]): Promise<void> {
+    if (!this.isTabGroupsSupported()) {
+      // Keep UI grouping fallback for environments without Tab Groups.
+      const groups = (await storageService.getCache<Record<string, number[]>>('tab-groups')) || {};
+      for (const r of results) {
+        if (!groups[r.groupId]) groups[r.groupId] = [];
+        if (!groups[r.groupId].includes(r.tabId)) groups[r.groupId].push(r.tabId);
+      }
+      await storageService.setCache('tab-groups', groups);
+      return;
+    }
+
+    // Group in the current window only.
+    const currentWindowTabs = await chrome.tabs.query({ currentWindow: true });
+    const currentWindowTabIds = new Set(currentWindowTabs.map(t => t.id).filter((id): id is number => typeof id === 'number'));
+    const validResults = results.filter(r => currentWindowTabIds.has(r.tabId));
+    if (validResults.length === 0) return;
+
+    // Ungroup first to avoid mixing prior groups.
+    try {
+      // chrome.tabs.ungroup exists when tabGroups is supported.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ungroup = (chrome.tabs as any).ungroup as undefined | ((tabIds: number[]) => Promise<void>);
+      await ungroup?.(validResults.map(r => r.tabId));
+    } catch {
+      // ignore
+    }
+
+    const byCategory = new Map<string, number[]>();
+    for (const r of validResults) {
+      const title = r.category?.trim() || 'Other';
+      const list = byCategory.get(title) || [];
+      list.push(r.tabId);
+      byCategory.set(title, list);
+    }
+
+    for (const [category, tabIds] of byCategory.entries()) {
+      const uniqueTabIds = Array.from(new Set(tabIds));
+      if (uniqueTabIds.length === 0) continue;
+
+      try {
+        const groupId = await chrome.tabs.group({ tabIds: uniqueTabIds });
+        await chrome.tabGroups.update(groupId, {
+          title: category,
+          color: this.tabGroupColorForCategory(category),
+          collapsed: false,
+        });
+      } catch (e) {
+        console.warn('Failed to create/update tab group for category:', category, e);
+      }
+    }
+  }
+
   async groupTabs(groupId: string, tabIds: number[]): Promise<void> {
-    // Chrome doesn't have native tab grouping API in all versions
-    // Store grouping in local storage for UI purposes
-    const groups = await storageService.getCache<Record<string, number[]>>('tab-groups') || {};
+    // Manual grouping request from UI.
+    if (this.isTabGroupsSupported()) {
+      const groupTitle = groupId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      const group = await chrome.tabs.group({ tabIds });
+      await chrome.tabGroups.update(group, {
+        title: groupTitle,
+        color: this.tabGroupColorForCategory(groupTitle),
+        collapsed: false,
+      });
+      return;
+    }
+
+    // Fallback: store grouping for UI.
+    const groups = (await storageService.getCache<Record<string, number[]>>('tab-groups')) || {};
     groups[groupId] = tabIds;
     await storageService.setCache('tab-groups', groups);
   }
 
   async focusTabGroup(groupId: string): Promise<void> {
-    const groups = await storageService.getCache<Record<string, number[]>>('tab-groups') || {};
-    const tabIds = groups[groupId] || [];
-
-    if (tabIds.length > 0) {
-      // Focus first tab in group
-      await chrome.tabs.update(tabIds[0], { active: true });
+    if (this.isTabGroupsSupported()) {
+      const numericGroupId = Number(groupId);
+      if (!Number.isNaN(numericGroupId) && numericGroupId > 0) {
+        const tabs = await chrome.tabs.query({ currentWindow: true, groupId: numericGroupId });
+        const first = tabs.find(t => typeof t.id === 'number');
+        if (first?.id) await chrome.tabs.update(first.id, { active: true });
+      }
+      return;
     }
+
+    const groups = (await storageService.getCache<Record<string, number[]>>('tab-groups')) || {};
+    const tabIds = groups[groupId] || [];
+    if (tabIds.length > 0) await chrome.tabs.update(tabIds[0], { active: true });
   }
 
   async getTabGroups(): Promise<TabGroup[]> {
-    const groups = await storageService.getCache<Record<string, number[]>>('tab-groups') || {};
-    const allTabs = await this.getAllTabs();
-    
+    if (this.isTabGroupsSupported()) {
+      const groups = await chrome.tabGroups.query({});
+      const tabs = await this.getAllTabs({ currentWindow: true });
+      const chromeTabs = await chrome.tabs.query({ currentWindow: true });
+      const tabById = new Map<number, Tab>(tabs.map(t => [t.id, t]));
+      const chromeTabById = new Map<number, chrome.tabs.Tab>(
+        chromeTabs
+          .filter(t => typeof t.id === 'number')
+          .map(t => [t.id as number, t])
+      );
+
+      return groups.map(g => {
+        const groupTabs = Array.from(chromeTabById.values())
+          .filter(t => t.groupId === g.id)
+          .map(t => (t.id ? tabById.get(t.id) : undefined))
+          .filter((t): t is Tab => Boolean(t));
+
+        return {
+          id: String(g.id),
+          name: g.title || 'Untitled Group',
+          tabs: groupTabs,
+        };
+      });
+    }
+
+    const groups = (await storageService.getCache<Record<string, number[]>>('tab-groups')) || {};
+    const allTabs = await this.getAllTabs({ currentWindow: true });
     return Object.entries(groups).map(([id, tabIds]) => ({
       id,
       name: id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
