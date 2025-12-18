@@ -8,6 +8,7 @@ interface TabStore {
   error: string | null;
   
   fetchTabs: () => Promise<void>;
+  fetchTabGroups: () => Promise<void>;
   categorizeTabs: (tabIds?: number[]) => Promise<void>;
   focusGroup: (groupId: string) => Promise<void>;
 }
@@ -17,6 +18,21 @@ export const useTabStore = create<TabStore>((set, get) => ({
   groups: [],
   loading: false,
   error: null,
+
+  fetchTabGroups: async () => {
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: 'GET_TAB_GROUPS',
+        payload: undefined,
+      });
+
+      if (response.success) {
+        set({ groups: response.data });
+      }
+    } catch {
+      // ignore (keep best-effort)
+    }
+  },
 
   fetchTabs: async () => {
     set({ loading: true, error: null });
@@ -28,6 +44,8 @@ export const useTabStore = create<TabStore>((set, get) => ({
 
       if (response.success) {
         set({ tabs: response.data, loading: false });
+        // Keep groups in sync with real Chrome groups (best-effort)
+        await get().fetchTabGroups();
       } else {
         set({ error: response.error, loading: false });
       }
@@ -45,28 +63,11 @@ export const useTabStore = create<TabStore>((set, get) => ({
       });
 
       if (response.success) {
-        // Group tabs by category
-        const grouped = new Map<string, Tab[]>();
-        const tabs = get().tabs;
-
-        response.data.forEach((result: any) => {
-          const tab = tabs.find(t => t.id === result.tabId);
-          if (tab) {
-            const category = result.category;
-            if (!grouped.has(category)) {
-              grouped.set(category, []);
-            }
-            grouped.get(category)!.push({ ...tab, category, groupId: result.groupId });
-          }
-        });
-
-        const groups: TabGroup[] = Array.from(grouped.entries()).map(([name, tabs]) => ({
-          id: name.toLowerCase().replace(/\s+/g, '-'),
-          name,
-          tabs,
-        }));
-
-        set({ groups, loading: false });
+        // After categorization, tab groups should exist physically; fetch them.
+        await get().fetchTabGroups();
+        // Refresh tab list too (titles/favicons can change during grouping)
+        await get().fetchTabs();
+        set({ loading: false });
       } else {
         set({ error: response.error, loading: false });
       }

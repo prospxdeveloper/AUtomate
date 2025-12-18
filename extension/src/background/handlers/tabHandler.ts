@@ -6,6 +6,9 @@ export async function handleTabMessage(message: Message): Promise<any> {
     case 'GET_TABS':
       return tabService.getAllTabs();
 
+    case 'GET_TAB_GROUPS':
+      return tabService.getTabGroups();
+
     case 'CATEGORIZE_TABS':
       const tabIds = message.payload?.tabIds;
       return tabService.categorizeTabs(tabIds);
