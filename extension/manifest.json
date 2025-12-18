@@ -56,11 +56,5 @@
       },
       "description": "Categorize all open tabs"
     }
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["src/content/injector.ts"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

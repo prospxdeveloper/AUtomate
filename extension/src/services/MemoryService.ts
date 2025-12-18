@@ -27,9 +27,13 @@ export class MemoryService {
 
     // Auto-generate tags if not provided
     if (!fullMemory.tags || fullMemory.tags.length === 0) {
-      try {
-        fullMemory.tags = await llmService.extractTags(fullMemory.content);
-      } catch {
+      if (llmService.isConfigured()) {
+        try {
+          fullMemory.tags = await llmService.extractTags(fullMemory.content);
+        } catch {
+          fullMemory.tags = this.extractTagsHeuristic(fullMemory.content);
+        }
+      } else {
         fullMemory.tags = this.extractTagsHeuristic(fullMemory.content);
       }
     }

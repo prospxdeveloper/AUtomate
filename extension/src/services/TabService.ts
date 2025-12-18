@@ -1,5 +1,4 @@
 import type { Tab, TabGroup, TabCategorizationResult } from '@/types';
-import { llmService } from './LLMService';
 import { apiClient } from './APIClient';
 import { storageService } from './StorageService';
 
@@ -66,34 +65,54 @@ export class TabService {
   }
 
   private async categorizeTabsLocally(tabs: Tab[]): Promise<TabCategorizationResult[]> {
-    const results: TabCategorizationResult[] = [];
+    return tabs.map((tab) => {
+      const category = this.categorizeTabHeuristic(tab);
+      const groupId = category.toLowerCase().replace(/\s+/g, '-');
+      return {
+        tabId: tab.id,
+        category,
+        groupId,
+        priority: 0,
+      };
+    });
+  }
 
-    for (const tab of tabs) {
-      try {
-        const context = `URL: ${tab.url}\nTitle: ${tab.title}`;
-        const category = await llmService.categorize(
-          'Categorize this webpage into one of: Work, Personal, Research, Shopping, Social, Entertainment, Development, Other',
-          context
-        );
+  private categorizeTabHeuristic(tab: Tab): string {
+    const url = (tab.url || '').toLowerCase();
+    const title = (tab.title || '').toLowerCase();
+    const hay = `${url} ${title}`;
 
-        results.push({
-          tabId: tab.id,
-          category: category || 'Other',
-          groupId: category.toLowerCase().replace(/\s+/g, '-'),
-          priority: 0,
-        });
-      } catch (error) {
-        console.error(`Failed to categorize tab ${tab.id}:`, error);
-        results.push({
-          tabId: tab.id,
-          category: 'Other',
-          groupId: 'other',
-          priority: 0,
-        });
-      }
+    const hasAny = (needles: string[]) => needles.some(n => hay.includes(n));
+
+    if (hasAny(['github.com', 'gitlab.com', 'bitbucket', 'jira', 'linear.app', 'notion.so', 'confluence', 'docs.google.com', 'drive.google.com', 'calendar.google.com', 'slack.com'])) {
+      return 'Work';
     }
 
-    return results;
+    if (hasAny(['stackoverflow.com', 'developer.mozilla.org', 'mdn', 'docs.', 'documentation', 'api ', 'sdk', 'npmjs.com', 'pypi.org', 'rust-lang.org', 'go.dev', 'nextjs.org', 'react.dev'])) {
+      return 'Development';
+    }
+
+    if (hasAny(['arxiv.org', 'scholar.google', 'wikipedia.org', 'research', 'paper', 'journal', 'dataset'])) {
+      return 'Research';
+    }
+
+    if (hasAny(['amazon.', 'flipkart', 'ebay.', 'walmart', 'aliexpress', 'shop', 'checkout', 'cart', 'product'])) {
+      return 'Shopping';
+    }
+
+    if (hasAny(['twitter.com', 'x.com', 'facebook.com', 'instagram.com', 'linkedin.com', 'reddit.com', 'discord.com', 'threads.net'])) {
+      return 'Social';
+    }
+
+    if (hasAny(['youtube.com', 'netflix.com', 'primevideo', 'spotify.com', 'music', 'movie', 'stream', 'twitch.tv'])) {
+      return 'Entertainment';
+    }
+
+    if (hasAny(['bank', 'invoice', 'receipt', 'tax', 'payment', 'order', 'account', 'profile', 'settings'])) {
+      return 'Personal';
+    }
+
+    return 'Other';
   }
 
   async groupTabs(groupId: string, tabIds: number[]): Promise<void> {

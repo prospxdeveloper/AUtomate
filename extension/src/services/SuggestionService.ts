@@ -1,5 +1,4 @@
 import type { Suggestion, PageContext } from '@/types';
-import { llmService } from './LLMService';
 import { memoryService } from './MemoryService';
 import { tabService } from './TabService';
 import { apiClient } from './APIClient';
@@ -89,38 +88,52 @@ export class SuggestionService {
     context: PageContext,
     memories: any[]
   ): Promise<Suggestion[]> {
-    const memoryContext = memories.map(m => m.content).join('\n');
-    const contextStr = `URL: ${context.url}\nTitle: ${context.title}\nContent: ${context.content}`;
-    
-    const suggestions = await llmService.suggest(contextStr, [memoryContext]);
-    
-    return suggestions.map((text, index) => ({
-      id: `suggestion_${Date.now()}_${index}`,
-      text,
-      action: this.inferAction(text, context),
+    // Local heuristic suggestions (no extension-side LLM key required)
+    const url = (context?.url || '').toLowerCase();
+
+    const base: Array<{ text: string; action: Suggestion['action']; confidence: number }> = [];
+
+    if (url.includes('gmail')) {
+      base.push({
+        text: 'Draft a quick follow-up email for this context',
+        action: 'COMPOSE_EMAIL',
+        confidence: 0.8,
+      });
+    }
+
+    if (url.includes('youtube')) {
+      base.push({
+        text: 'Summarize this video and save key takeaways',
+        action: 'SUMMARIZE_VIDEO',
+        confidence: 0.85,
+      });
+    }
+
+    // If user has memories enabled and we have any, offer a lightweight reminder.
+    if (Array.isArray(memories) && memories.length > 0) {
+      base.push({
+        text: 'Review related memories for this page',
+        action: 'SAVE_MEMORY',
+        confidence: 0.6,
+      });
+    }
+
+    if (base.length === 0) {
+      base.push({
+        text: 'Save this page to your memories',
+        action: 'SAVE_MEMORY',
+        confidence: 0.6,
+      });
+    }
+
+    return base.slice(0, 2).map((s, idx) => ({
+      id: `suggestion_${Date.now()}_${idx}`,
+      text: s.text,
+      action: s.action,
       context: context.url,
-      confidence: 0.8,
+      confidence: s.confidence,
       timestamp: new Date(),
     }));
-  }
-
-  private inferAction(suggestionText: string, _context: PageContext): string {
-    const lower = suggestionText.toLowerCase();
-    
-    if (lower.includes('email') || lower.includes('draft')) {
-      return 'COMPOSE_EMAIL';
-    }
-    if (lower.includes('save') || lower.includes('remember')) {
-      return 'SAVE_MEMORY';
-    }
-    if (lower.includes('search') || lower.includes('find')) {
-      return 'SEARCH';
-    }
-    if (lower.includes('summarize')) {
-      return 'SUMMARIZE';
-    }
-    
-    return 'CUSTOM';
   }
 
   async executeSuggestion(suggestionId: string): Promise<any> {
@@ -134,6 +147,7 @@ export class SuggestionService {
     switch (suggestion.action) {
       case 'SAVE_MEMORY':
         return memoryService.saveMemory({
+          // Save a small note pointing back to the page. This is safe and reversible.
           content: suggestion.text,
           tags: [],
           source: suggestion.context,
@@ -146,9 +160,15 @@ export class SuggestionService {
 
       case 'SUMMARIZE_VIDEO':
         return useCaseService.execute({ useCaseId: 'youtube-summarization', parameters: {} });
-      
-      default:
-        console.log('Executing custom action:', suggestion.action);
+
+      default: {
+        // Don't silently no-op: fall back to a safe action.
+        return memoryService.saveMemory({
+          content: suggestion.text,
+          tags: [],
+          source: suggestion.context,
+        });
+      }
     }
 
     // Remove from active suggestions

@@ -119,13 +119,18 @@ async function handlePageMessage(message: Message): Promise<any> {
     const ctx = await extractFromContentScript();
     const text = `${ctx?.title || tab.title || ''}\n\n${ctx?.content || ''}`.trim();
     if (!text) return tab.title || '';
-    try {
-      return await llmService.summarize(text, 280);
-    } catch {
-      // Fallback: short, non-LLM summary.
-      const compact = text.replace(/\s+/g, ' ').trim();
-      return compact.length <= 280 ? compact : compact.slice(0, 277) + '...';
+
+    if (llmService.isConfigured()) {
+      try {
+        return await llmService.summarize(text, 280);
+      } catch {
+        // ignore and fallback
+      }
     }
+
+    // Fallback: short, non-LLM summary.
+    const compact = text.replace(/\s+/g, ' ').trim();
+    return compact.length <= 280 ? compact : compact.slice(0, 277) + '...';
   }
 }
 

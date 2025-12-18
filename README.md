@@ -63,8 +63,6 @@ npm install
 Extension (.env):
 ```
 VITE_API_BASE_URL=http://localhost:3000
-VITE_OPENROUTER_API_KEY=your_key_here
-
 # PostHog (optional)
 VITE_PUBLIC_POSTHOG_KEY=your_key_here
 VITE_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
@@ -74,6 +72,8 @@ Webapp (.env):
 ```
 DATABASE_URL="file:./dev.db"
 OPENROUTER_API_KEY=your_key_here
+OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
+OPENROUTER_FALLBACK_MODEL=google/gemini-2.0-flash-lite
 COMPOSIO_API_KEY=your_key_here
 
 # PostHog (optional)

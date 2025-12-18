@@ -2,8 +2,8 @@
  * injector.ts
  *
  * Web-accessible helper for safe script injection into the page context.
- * This is a placeholder implementation; content scripts can import it
- * and inject when needed for sites that require page-context access.
+ * Content scripts can import it and inject when needed for sites that
+ * require page-context access.
  */
 
 export function injectScript(srcUrl: string): void {
