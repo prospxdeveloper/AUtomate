@@ -10,6 +10,7 @@ interface TabStore {
   fetchTabs: () => Promise<void>;
   fetchTabGroups: () => Promise<void>;
   categorizeTabs: (tabIds?: number[]) => Promise<void>;
+  uncategorizeTabs: (tabIds?: number[]) => Promise<void>;
   focusGroup: (groupId: string) => Promise<void>;
 }
 
@@ -66,6 +67,27 @@ export const useTabStore = create<TabStore>((set, get) => ({
         // After categorization, tab groups should exist physically; fetch them.
         await get().fetchTabGroups();
         // Refresh tab list too (titles/favicons can change during grouping)
+        await get().fetchTabs();
+        set({ loading: false });
+      } else {
+        set({ error: response.error, loading: false });
+      }
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  uncategorizeTabs: async (tabIds?: number[]) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: 'UNCATEGORIZE_TABS',
+        payload: { tabIds },
+      });
+
+      if (response.success) {
+        // After ungrouping, groups should disappear physically; refresh.
+        await get().fetchTabGroups();
         await get().fetchTabs();
         set({ loading: false });
       } else {

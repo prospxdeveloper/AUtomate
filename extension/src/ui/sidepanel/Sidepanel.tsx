@@ -50,7 +50,7 @@ function validateArgs(schema: any, args: Record<string, any>): string[] {
 
 export default function Sidepanel() {
   const [activeTab, setActiveTab] = useState<'tasks' | 'chat'>('tasks');
-  const { tabs, groups, loading: tabLoading, fetchTabs, categorizeTabs } = useTabStore();
+  const { tabs, groups, loading: tabLoading, fetchTabs, categorizeTabs, uncategorizeTabs } = useTabStore();
   const { searchResults, searchMemories } = useMemoryStore();
   const { suggestions, fetchSuggestions, executeSuggestion, dismissSuggestion } = useSuggestionStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -275,6 +275,10 @@ export default function Sidepanel() {
 
   const handleCategorize = async () => {
     await categorizeTabs();
+  };
+
+  const handleUncategorize = async () => {
+    await uncategorizeTabs();
   };
 
   const handleSearch = async (query: string) => {
@@ -518,6 +522,13 @@ export default function Sidepanel() {
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <button onClick={handleCategorize} disabled={tabLoading} className="btn btn-primary disabled:opacity-50">
                   {tabLoading ? 'Categorizing…' : `Categorize tabs (${tabs.length})`}
+                </button>
+                <button
+                  onClick={handleUncategorize}
+                  disabled={tabLoading || groups.length === 0}
+                  className="btn btn-secondary disabled:opacity-50"
+                >
+                  Uncategorize
                 </button>
                 <button onClick={() => fetchSuggestions()} className="btn btn-secondary">
                   Refresh suggestions

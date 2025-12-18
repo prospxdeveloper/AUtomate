@@ -218,6 +218,7 @@ export type MessageType =
   | 'GET_TABS'
   | 'GET_TAB_GROUPS'
   | 'CATEGORIZE_TABS'
+  | 'UNCATEGORIZE_TABS'
   | 'GROUP_TABS'
   | 'FOCUS_TAB_GROUP'
   
@@ -272,6 +273,7 @@ export interface PayloadMap {
   'GET_TABS': undefined;
   'GET_TAB_GROUPS': undefined;
   'CATEGORIZE_TABS': { tabIds?: number[] };
+  'UNCATEGORIZE_TABS': { tabIds?: number[] };
   'GROUP_TABS': { groupId: string; tabIds: number[] };
   'FOCUS_TAB_GROUP': { groupId: string };
   
@@ -308,6 +310,7 @@ export interface ResponseMap {
   'GET_TABS': Tab[];
   'GET_TAB_GROUPS': TabGroup[];
   'CATEGORIZE_TABS': TabCategorizationResult[];
+  'UNCATEGORIZE_TABS': { success: boolean };
   'GROUP_TABS': { success: boolean };
   'FOCUS_TAB_GROUP': { success: boolean };
   

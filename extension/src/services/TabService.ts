@@ -205,6 +205,38 @@ export class TabService {
     }
   }
 
+  async uncategorizeTabs(tabIds?: number[]): Promise<void> {
+    if (!this.isTabGroupsSupported()) {
+      // Fallback: clear cached groups used only for UI grouping.
+      await storageService.deleteCache('tab-groups');
+      return;
+    }
+
+    // Ungroup in the current window only.
+    const chromeTabs = await chrome.tabs.query({ currentWindow: true });
+
+    const candidates = chromeTabs
+      .filter(t => typeof t.id === 'number')
+      .filter(t => (typeof t.groupId === 'number' ? t.groupId !== -1 : false))
+      .map(t => t.id as number);
+
+    const target = Array.from(
+      new Set(
+        (tabIds && tabIds.length > 0 ? candidates.filter(id => tabIds.includes(id)) : candidates)
+      )
+    );
+
+    if (target.length === 0) return;
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ungroup = (chrome.tabs as any).ungroup as undefined | ((tabIds: number[]) => Promise<void>);
+      await ungroup?.(target);
+    } catch {
+      // ignore
+    }
+  }
+
   async groupTabs(groupId: string, tabIds: number[]): Promise<void> {
     // Manual grouping request from UI.
     if (this.isTabGroupsSupported()) {
@@ -242,7 +274,8 @@ export class TabService {
 
   async getTabGroups(): Promise<TabGroup[]> {
     if (this.isTabGroupsSupported()) {
-      const groups = await chrome.tabGroups.query({});
+      const currentWindow = await chrome.windows.getCurrent();
+      const groups = await chrome.tabGroups.query({ windowId: currentWindow.id });
       const tabs = await this.getAllTabs({ currentWindow: true });
       const chromeTabs = await chrome.tabs.query({ currentWindow: true });
       const tabById = new Map<number, Tab>(tabs.map(t => [t.id, t]));
@@ -263,7 +296,7 @@ export class TabService {
           name: g.title || 'Untitled Group',
           tabs: groupTabs,
         };
-      });
+      }).filter(g => g.tabs.length > 0);
     }
 
     const groups = (await storageService.getCache<Record<string, number[]>>('tab-groups')) || {};

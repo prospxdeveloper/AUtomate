@@ -13,6 +13,10 @@ export async function handleTabMessage(message: Message): Promise<any> {
       const tabIds = message.payload?.tabIds;
       return tabService.categorizeTabs(tabIds);
 
+    case 'UNCATEGORIZE_TABS':
+      await tabService.uncategorizeTabs(message.payload?.tabIds);
+      return { success: true };
+
     case 'GROUP_TABS':
       await tabService.groupTabs(
         message.payload.groupId,

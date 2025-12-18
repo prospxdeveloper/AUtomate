@@ -151,6 +151,11 @@ export class StorageService {
     return cached.value;
   }
 
+  async deleteCache(key: string): Promise<void> {
+    if (!this.db) await this.init();
+    await this.db!.delete('cache', key);
+  }
+
   async clearCache(): Promise<void> {
     if (!this.db) await this.init();
     await this.db!.clear('cache');
