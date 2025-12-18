@@ -1,0 +1,342 @@
+ThirdLayer, Inc.: Revolutionizing Browser-Based Workflows with Dex
+Executive Summary
+ThirdLayer, Inc. is an innovative applied research and product lab transforming how people interact with artificial intelligence in their daily workflows. Founded in 2025 by Kevin Gu and Regina Lin, the company is backed by Y Combinator (Winter 2025 batch) and leading investors in deep tech, HCI, and consumer technology[1][2]. Based in San Francisco, ThirdLayer has developed Dex, the world's first AI browser copilot—a groundbreaking solution that integrates intelligence directly into the browser, turning Chrome into an intelligent personal workspace[1].
+Rather than forcing users into separate AI chat interfaces, Dex embeds context-aware AI assistance directly where work happens: in your browser, across your tabs, and within your existing tools. The platform solves a critical gap in AI adoption: while language models have advanced exponentially, the interfaces through which users interact with them remain static and disconnected from real workflows[2].
+Company Overview
+Mission and Vision
+ThirdLayer is reimagining the interface between humans and artificial intelligence. The company's core mission is to build systems that extend how people think and move, augmenting human capability rather than replacing it[2].
+The founding vision emerged from a personal pain point: founders Kevin and Regina observed the inefficiencies plaguing knowledge workers, particularly in industries like investment banking where people work extreme hours juggling between broken software systems. Instead of designing yet another AI chat, they asked a fundamental question: What if the browser itself became intelligent?[2]
+Each major shift in computing has come from better human-machine interaction—from hardware, to operating systems, to graphical interfaces. ThirdLayer believes the next leap isn't just more powerful AI models, but a new kind of interface built for intelligence: one that understands context, adapts to user intent, and works within existing workflows rather than demanding adaptation to new tools[2].
+Team and Expertise
+ThirdLayer is led by co-founders with exceptional credentials:
+•	Kevin Gu - Co-Founder and CEO, Harvard graduate with degrees in Mathematics and Computer Science & Engineering[2]
+•	Regina Lin - Co-Founder[2]
+The team consists of experienced builders with backgrounds from premier institutions and companies:
+•	Experience and offers from top quant trading firms, frontier AI labs, and academic research centers[2]
+•	Collaboration with advisors from MIT Media Lab, Stanford SAIL, Berkeley BAIR, Sakana AI, DeepMind, and Eleven Labs[2]
+•	Team members with deep expertise in multiagent systems, human-computer interaction (HCI), long-context memory, intent prediction, and generative UI[2]
+The company is actively hiring for engineering and product roles, seeking builders and operators who can drive bold ideas from research to execution[2].
+Backing and Support
+•	Y Combinator: Winter 2025 batch (YC W25)[1]
+•	Investor network: Leading investors in deep tech and consumer technology[2]
+•	Growth trajectory: Launched publicly on December 16, 2025, on Y Combinator's Demo Day with immediate adoption[2]
+The Problem: Modern Work is Broken
+The Context Switching Bottleneck
+Modern knowledge work is fundamentally broken. Today's reality for millions of professionals:
+•	Managing 15+ open browser tabs simultaneously[2]
+•	Constant context switching between disconnected applications[2]
+•	Information silos: Gmail, Google Sheets, Jira, GitHub, Slack—each operating independently[2]
+•	Manual data entry and repetitive tasks consuming hours daily[2]
+•	Existing AI tools stuck behind chat interfaces disconnected from actual work[1][2]
+The core bottleneck isn't just automation—it's context switching and interface friction. Each app switch breaks focus. Every tool requires learning new shortcuts. AI assistants operate in isolated chats, forcing users to context-switch and manually translate AI responses back into their work[2].
+Why Current Solutions Fall Short
+Traditional AI web agents: Most are "set-and-forget" chats—you hand off a task and check back later with no real-time visibility. This friction is unacceptable for workflows requiring instant feedback and responsive action[1].
+Static interfaces: UIs haven't evolved to support intelligence. They can't adapt, anticipate, or understand real context[2].
+Ecosystem silos: Every AI platform is another closed ecosystem—locked in chats, dashboards, or proprietary tooling rather than living in the browser where work actually happens[2].
+Dex: The Solution
+What is Dex?
+Dex is an AI copilot for your browser—a Chrome extension that transforms your browser into an intelligent, context-aware personal workspace[1][2]. Rather than replacing your tools, Dex enhances and orchestrates them, working alongside you rather than around you[1][2].
+Think of Dex as "Spotlight Search meets AI automation + personal expert for everyday apps"—available through simple voice and text commands directly in your browser[1].
+Accessibility: Available at https://www.joindex.com or as a Chrome extension via the Chrome Web Store (search "Dex")[1][3]
+Availability: Free plan available with Pro, Business, and Enterprise tiers for advanced features and higher usage[1]
+Launch date: December 2025 (newly launched)[1][2]
+Core Philosophy: "Cursor for Your Browser"
+ThirdLayer took a deliberate design approach inspired by Cursor (an AI-enhanced code editor) rather than attempting a "Devin" model (an autonomous AI agent). The key difference[1]:
+•	Cursor approach: AI that works with you, providing instant feedback and responsive action as you drive workflows
+•	Devin approach: AI that works for you, handling tasks autonomously with slow feedback loops and reduced visibility
+Dex chose the faster, more collaborative path—enabling you to maintain control and real-time context while getting AI-powered assistance[1].
+Technical Architecture
+Behind Dex's user-friendly interface lies sophisticated technical infrastructure addressing core challenges[2]:
+ 	Multiagent Orchestration — Coordinated sub-agents mixing tool-use and browser control for complex, multi-step workflows
+ 	Living Memory — A context engine that learns workflows, denoises actions, and retrieves information with precision
+ 	Intent-Aware Perception — Linking on-screen state to user goals, powering adaptive, intelligent interfaces
+ 	Trajectory Prediction — Predicting personalized action flows into full workflows that build trust and enable proactive assistance
+Infrastructure partners: AWS, Supabase, Google Cloud Platform, OpenAI, Anthropic, and Turbopuffer[3]
+Core Features and Capabilities
+1. Cross-App Automation and Integration
+Dex connects with 14+ applications and services, enabling seamless task execution across your entire digital workspace[1]:
+ 	Google Suite: Gmail, Google Sheets, Google Calendar, Google Docs
+ 	Work Tools: Jira, GitHub, Linear, Notion
+ 	CRM and Sales: LinkedIn, Salesforce, HubSpot
+ 	Communication: Slack
+ 	Any web application: Via browser interaction and DOM analysis
+Users can give natural language commands that span multiple tools, and Dex handles the orchestration—scraping data from one app, transforming it, and sending it to another[1].
+2. Context-Aware Assistance and Suggestion Engine
+Dex proactively surfaces what you need before you ask[1]:
+•	Intelligent prediction: Dex learns your workflows and predicts your next steps, suggesting actions contextually
+•	Real-time suggestions: As you work, Dex surfaces relevant information, contacts, or actions based on page content and your interaction history
+•	Adaptive interface: The system improves continuously, becoming smarter and more personalized the more you use it[1]
+3. Browser Memory and Learning System
+Unlike traditional tools that forget everything once you close a tab, Dex maintains persistent context[1]:
+•	Optional memory feature: Turn on memory to have Dex remember context as you work
+•	Context retrieval: Dex brings back context when needed—automatically creating better to-do lists or continuing research where you left off
+•	Complete user control: View, manage, or disable memories anytime from the dashboard
+•	Privacy-first: Browser memories are completely optional; users maintain full control[1][3]
+4. Meeting and Calendar Management
+Eliminate back-and-forth scheduling with natural language commands[1]:
+•	Smart scheduling: "Schedule a 30-minute meeting with Charles tomorrow when we're both free" — Dex reads calendars and handles all logistics[1]
+•	Meeting prep: Read your calendar, retrieve contact info, analyze past email threads, and generate talking point briefs automatically[1]
+•	Calendar integration: Seamless integration with Google Calendar and other scheduling tools
+5. Email and Communication Automation
+Transform email from a time sink into an efficient channel[1]:
+•	Personalized mass outreach: Pull recipient data from Google Sheets and send personalized mass emails via Gmail[1]
+•	Intelligent drafting: Compose professional emails with AI assistance, adapting tone and content to context
+•	Thread analysis: Automatically summarize email threads and highlight important context
+•	Follow-up management: Set reminders and automate follow-up sequences
+6. Data Extraction and Analysis
+Turn web data into actionable intelligence with a single click[1]:
+•	LinkedIn scraping: Extract profiles including work history and convert to structured data[1]
+•	Lead list building: Automatically build prospect lists with comprehensive information[1]
+•	Data transformation: Extract, clean, and export web data to Google Sheets or other platforms[1]
+•	Natural language querying: Ask questions about data and get instant answers
+7. Task Management and Workflow Automation
+Orchestrate complex, multi-step workflows effortlessly[1]:
+•	Spreadsheet operations: Dex can read spreadsheets, understand data, perform calculations, and update cells with precision[1]
+•	Form filling: Intelligently populate forms across web applications[1]
+•	Workflow chains: Create sequences of actions that execute across multiple applications
+•	Conditional logic: Dex can make decisions based on data and branch workflows accordingly
+8. Note Management with Zero Friction
+Capture and organize thoughts without workflow disruption[1]:
+•	Frictionless capture: Save quick thoughts and Dex transforms them into full context automatically[1]
+•	Smart organization: Notes are automatically organized and retrievable based on content and context
+•	Integration with workflows: Notes feed into task management and reminder systems
+•	Search and retrieval: Find notes using natural language queries
+9. Smart Navigation and App Switching
+Eliminate tab chaos and app switching friction[1]:
+•	Find and execute: Locate the right tool or information, and execute tasks within it seamlessly[1]
+•	Context awareness: Dex understands which application is relevant for your current task
+•	One-command switching: Move between apps and platforms with natural language commands
+•	Reduced cognitive load: No more hunting for the right tab or tool
+10. Contact and Relationship Management
+(Based on Dex's contact management copilot features[4]):
+•	Contact organization: Organize your professional network effortlessly
+•	Bulk updates: Update contact details like email, phone, job title in bulk
+•	Relationship tracking: Add timeline items and notes to track key interactions
+•	Smart reminders: Set reminders for follow-ups based on contact importance
+•	AI-powered suggestions: Get gift ideas or introduction suggestions based on context and interaction history
+•	Search and filtering: Find contacts by name, title, location, company, education, or custom fields
+•	Group management: Organize contacts into custom groups for targeted communication
+Use Cases and Applications
+1. Investment Banking and Financial Services
+Problem: Analysts working 9am-3am, juggling spreadsheets, Bloomberg terminals, email, and reporting tools.
+Dex Solution[2]:
+•	Automate data entry from Bloomberg into Excel spreadsheets
+•	Generate financial analyses and reports automatically
+•	Schedule stakeholder meetings with availability matching
+•	Create dashboards that pull data from multiple sources
+•	Reduce manual work from hours to minutes per task
+Impact: Reclaim time for strategic analysis instead of data manipulation[2]
+2. Recruitment and Talent Management
+Problem: Hiring managers spending hours on LinkedIn, building prospect lists manually, and coordinating interviews.
+Dex Solution[1]:
+•	Scrape LinkedIn profiles and export to Google Sheets with work history
+•	Build comprehensive lead lists with one click
+•	Automatically extract candidate information and qualifications
+•	Schedule interviews by reading all parties' calendars
+•	Send personalized outreach emails at scale
+Impact: Hours saved on research, outreach, and coordination daily[2]
+3. Sales and Business Development
+Problem: GTM professionals juggling outreach across multiple platforms, manual data entry, and CRM updates.
+Dex Solution[1]:
+•	Pull recipient data from Sheets and send personalized mass emails via Gmail
+•	Automatically update CRM with new contact information
+•	Create lead scoring based on data across multiple platforms
+•	Track engagement and automate follow-up sequences
+•	Generate meeting notes and action items from calls
+Impact: 10x more outreach with better personalization[1]
+4. Student Research and Project Work
+Problem: Students managing research across numerous sources, organizing information, and preparing for meetings.
+Dex Solution[1]:
+•	Consolidate research from multiple tabs into organized notes
+•	Read calendar and prepare briefs before meetings
+•	Combine meeting context with email threads and LinkedIn profiles
+•	Generate talking points with citations and sources
+•	Automate report generation from research data
+Impact: Faster research, better-prepared meetings, higher quality work[1]
+5. Operations and Administration
+Problem: Operations teams stuck in spreadsheets, managing workflows across disconnected systems.
+Dex Solution[1]:
+•	Handle cross-system data manipulation automatically
+•	Map data between CRM, spreadsheets, and operational tools
+•	Flag missing data or inconsistencies
+•	Generate reports and dashboards automatically
+•	Automate approval workflows
+Impact: Tasks that took a full day of data manipulation completed in seconds[2]
+6. Customer Success and Support
+Problem: CS teams maintaining accounts across Salesforce, Slack, email, and support tickets.
+Dex Solution:
+•	Automatically surface customer context during calls
+•	Generate summary briefs before customer meetings
+•	Log interactions and update CRM automatically
+•	Route issues to correct teams
+•	Track follow-ups and action items
+Impact: Better customer context, faster issue resolution, improved relationship management
+7. Content Creation and Marketing
+Problem: Marketers coordinating across tools, managing multiple projects, and juggling approvals.
+Dex Solution:
+•	Automatically pull performance data from analytics tools
+•	Create content briefs by researching competitors and trends
+•	Generate content calendars and social schedules
+•	Automate asset delivery and team updates
+•	Track campaign performance across platforms
+Impact: Faster campaign iteration, better data-driven decisions
+8. Academic Research
+Problem: Researchers managing bibliography, organizing findings, conducting literature reviews.
+Dex Solution:
+•	Automatically organize research sources and citations
+•	Extract key findings across multiple papers
+•	Generate literature review summaries
+•	Create organized research databases
+•	Format citations and bibliographies automatically
+Impact: Faster research, better-organized findings, more time for analysis
+Advanced Features and Innovations
+1. Proactive AI That Learns
+Unlike passive tools, Dex becomes more helpful over time:
+•	Learns your working patterns, preferences, and workflows[1]
+•	Anticipates needs before you explicitly ask[1]
+•	Suggests relevant actions based on context[1]
+•	Continuously improves recommendations[1]
+2. Intent-Aware Interface
+Dex understands what you're trying to accomplish, not just the commands you give:
+•	Links visual page content to your underlying goals[2]
+•	Predicts the sequence of actions needed to accomplish objectives[2]
+•	Adapts suggestions based on inferred intent[2]
+•	Learns from trajectory data to improve predictions[2]
+3. Privacy-First Design
+Data control remains with users at all times:
+•	Optional memory feature you can enable/disable anytime[1]
+•	Transparent data handling in dashboard[1]
+•	Data not sold to third parties outside approved use cases[3]
+•	User choice about what context Dex remembers[1]
+4. Multimodal Interaction
+Multiple ways to interact with Dex:
+•	Voice commands: Natural speech commands (press Command+J on Mac, Alt+J on Windows/Linux)[1]
+•	Text chat: Type natural language requests[1]
+•	Visual interface: Interact through smart suggestions[1]
+5. Real-Time Collaboration
+Dex integrates with how you actually work:
+•	Works within existing tools rather than forcing new workflows[1]
+•	Runs in the browser alongside all your applications[1]
+•	Provides instant feedback and responsiveness[1]
+•	Maintains context across long sessions[1]
+Competitive Positioning
+Differentiation Strategy
+Feature/Capability	Dex	Traditional AI Agents	Traditional Tools
+Real-time Visibility	Yes	No	N/A
+Context Awareness	High	Low	None
+Browser-Native	Yes	No	Varies
+Cross-App Automation	Yes	Limited	Limited
+Learning Over Time	Yes	Limited	Limited
+Multi-Step Workflows	Yes	Limited	Limited
+User Control	High	Limited	High
+Adaptive Interface	Yes	No	No
+
+Table 1: Dex vs. Alternative Solutions
+Key Advantages
+1.	Cursor, not Devin: Real-time collaboration with AI, not autonomous "hand-off" agents
+2.	Browser-native: Works where work actually happens, not in isolated dashboards
+3.	Living memory: Context persists and improves over time
+4.	Multiagent orchestration: Handles complex, multi-step workflows
+5.	Intent-aware: Understands goals, not just commands
+6.	Privacy-first: User data stays under user control
+Pricing and Accessibility
+Plan Structure
+ThirdLayer offers tiered pricing to serve different user segments[1]:
+•	Free Plan: Get started immediately with core features
+•	Pro Plan: For power users needing advanced features and higher usage
+•	Business Plan: For teams with larger usage needs
+•	Enterprise Plan: Custom solutions for large organizations[1]
+Accessibility
+•	Platform: Chrome extension (Windows, macOS, Linux supported)[1]
+•	Access point: https://www.joindex.com or Chrome Web Store[1]
+•	Ease of use: One-click install with Command+J/Alt+J to activate[1]
+•	No setup friction: Works immediately with optional configuration[1]
+Target Users
+Dex is purpose-built for[1]:
+•	Knowledge workers managing multiple tools and workflows
+•	Founders and entrepreneurs juggling many responsibilities
+•	Students conducting research and preparing projects
+•	Professionals in data-heavy roles (finance, recruiting, sales)
+•	Anyone spending significant time in their browser on research, communication, or task management
+User Adoption and Traction
+Early Momentum
+•	4.7 out of 5 stars on Chrome Web Store (24+ ratings as of December 2025)[3]
+•	Thousands on waitlist even before public launch[2]
+•	Hours being saved daily by current users[2]
+•	Rapid iteration: Version 3.11 as of December 9, 2025, with frequent updates[3]
+Trusted User Base
+Dex is already trusted by high-performers at leading organizations including[1]:
+•	Tech startups and scale-ups
+•	Investment banks and financial firms
+•	Fortune 500 companies (pilot programs)
+•	Universities and research institutions
+Community Engagement
+•	Active Discord community for users to brainstorm and provide feedback[2]
+•	Twitter updates for latest feature announcements[2]
+•	Direct founder access for feature requests and suggestions[2]
+•	Design-forward community appreciating intentional, simple interfaces[2]
+Future Roadmap and Vision
+Near-Term Development
+•	Enhanced integrations: Expanding from 14+ apps to comprehensive coverage of all major business tools
+•	Improved memory systems: More sophisticated context understanding and retrieval
+•	Mobile support: Extending Dex capabilities to mobile browsers and devices
+•	Team features: Collaborative workflows and shared contexts for teams
+Long-Term Vision
+ThirdLayer's ultimate vision aligns with fundamental shifts in computing interfaces. Just as graphical interfaces made computers accessible to everyone, and operating systems made machines programmable, ThirdLayer believes intelligent browser interfaces will define the next era of human-computer interaction.
+The company is exploring adjacent frontiers[2]:
+•	Human-computer interaction (HCI) for AI-native interfaces
+•	Long-term context understanding and memory
+•	Multiagent architectures for collaborative AI systems
+•	Generative UI that adapts to user needs
+•	Intent prediction and trajectory modeling
+Privacy and Security
+Data Handling Principles
+•	Data maintained for service performance and usage management[3]
+•	Users solely responsible for data transmission[3]
+•	Regular routine backups maintained[3]
+•	No liability for data loss or corruption (users waive claims)[3]
+Third-Party Integrations
+All integrations are transparent and user-controlled:
+•	OAuth-based authentication for connected services
+•	Granular permission controls[1]
+•	Users can disconnect or delete data anytime[1]
+•	Clear policy on Third-Party Account data handling[3]
+Regulatory Compliance
+•	Delaware-registered company (ThirdLayer, Inc.)[3]
+•	Terms of Service address GDPR and international considerations[3]
+•	Privacy policy published on website
+•	Regular security practices and audits (implied)[3]
+Comparison with Competing Solutions
+vs. Traditional Web Automation Tools
+Traditional tools like Zapier focus on rigid, pre-built integrations. Dex provides:
+•	Natural language interface instead of workflow configuration
+•	Context awareness instead of simple if-then logic
+•	Learning and adaptation instead of static rules
+•	Real-time human involvement instead of set-and-forget automation
+vs. AI Web Agents (e.g., Operator by OpenAI)
+While AI agents like Operator provide autonomous task execution, Dex differentiates through:
+•	Real-time feedback and user involvement (Cursor vs. Devin approach)
+•	Browser-native integration rather than external agent
+•	Context persistence across sessions
+•	Adaptive learning from user behavior
+•	Lower latency for responsive workflows
+vs. Other Browser Extensions
+Most browser extensions focus on single functions (email, notes, shopping). Dex provides:
+•	Unified platform for multi-app orchestration
+•	AI-powered intelligence vs. passive tools
+•	Learning and personalization
+•	Cross-app data manipulation
+•	Natural language control
+Conclusion
+ThirdLayer, Inc. represents a fundamental rethinking of how humans interact with AI in their daily work. Rather than forcing users into chat interfaces or autonomous agents, Dex brings intelligence directly into the browser—the actual site of digital work.
+The company's deep technical expertise in multiagent systems, memory architectures, and intent prediction, combined with a founding vision rooted in solving real problems for knowledge workers, positions ThirdLayer as a meaningful innovation in the AI space[2].
+As AI capabilities continue advancing, the interface becomes increasingly critical. Dex demonstrates that the next wave of AI adoption won't come from more powerful models, but from fundamentally better interfaces that honor how people actually work. By embedding intelligence directly into the browser, learning from user behavior, and supporting complex multi-step workflows, Dex makes AI a practical tool for everyday productivity—not just a novelty experiment[1][2].
+For knowledge workers drowning in tabs, context switching, and manual data manipulation, Dex offers a practical path forward: an AI copilot that understands your work and helps you do it 10x faster—without breaking your flow[1].
+References
+[1] ThirdLayer. (2025). Dex - Your Second Brain in Chrome. https://www.joindex.com
+[2] ThirdLayer. (2025). ThirdLayer: Applied Research and Product Lab. https://thirdlayer.inc
+[3] Google. (2025). Dex - Chrome Web Store. https://chromewebstore.google.com/detail/dex/ignaljemchdlmoimaliinmonecgbdnkk
+[4] Dex. (2025). Dex Copilot - Contact Management. https://getdex.com/docs/ai/copilot
+[5] Y Combinator. (2025). Dex – Your AI Coworker for the Browser. https://www.ycombinator.com/launches/Mrm-dex-your-ai-coworker-for-the-browser
+[6] Washai.us. (2025). ThirdLayer - AI Tool Review & Analysis. https://washai.us/startup/thirdlayer
+[7] FunBlocks. (2025). Dex by Thirdlayer: Your Browser's AI Command Center. https://www.funblocks.net/aitools/reviews/dex-by-thirdlayer

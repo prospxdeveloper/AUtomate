@@ -1,0 +1,60 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Memory {
+  id          String   @id @default(cuid())
+  content     String
+  tags        String   // JSON array
+  source      String   // URL or source identifier
+  timestamp   DateTime @default(now())
+  embedding   String?  // Optional: for semantic search
+  metadata    String?  // JSON object for additional data
+  
+  @@index([timestamp])
+}
+
+model Integration {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  type        String   // gmail, notion, slack, github
+  config      String   // JSON config
+  enabled     Boolean  @default(true)
+  lastUsed    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UseCaseExecution {
+  id          String   @id @default(cuid())
+  useCaseId   String
+  status      String   // pending, running, completed, failed
+  input       String   // JSON input data
+  output      String?  // JSON output data
+  error       String?
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  
+  @@index([useCaseId])
+  @@index([status])
+}
+
+model TabSnapshot {
+  id          String   @id @default(cuid())
+  tabId       Int
+  url         String
+  title       String
+  category    String?
+  groupId     String?
+  priority    Int      @default(0)
+  timestamp   DateTime @default(now())
+  
+  @@index([timestamp])
+}
