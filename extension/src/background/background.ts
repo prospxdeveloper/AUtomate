@@ -13,6 +13,15 @@ import { llmService } from '@/services/LLMService';
 
 console.log('AUTOME background service worker initialized');
 
+// Prefer opening the side panel directly when the toolbar icon is clicked
+// (competitor-style full-height right panel). This is ignored on older Chrome.
+try {
+  (chrome.sidePanel as unknown as { setPanelBehavior?: (opts: { openPanelOnActionClick: boolean }) => void })
+    ?.setPanelBehavior?.({ openPanelOnActionClick: true });
+} catch {
+  // ignore
+}
+
 // Initialize storage on startup
 storageService.init().catch(console.error);
 
@@ -159,6 +168,16 @@ chrome.commands.onCommand.addListener((command) => {
         setTimeout(() => chrome.action.setBadgeText({ text: '' }), 2000);
       })
       .catch(console.error);
+  }
+});
+
+// Fallback: if the browser doesn't support openPanelOnActionClick, open manually.
+// (If the platform supports setPanelBehavior, this handler is redundant but harmless.)
+chrome.action?.onClicked?.addListener(async () => {
+  try {
+    await chrome.sidePanel?.open?.({ windowId: chrome.windows.WINDOW_ID_CURRENT });
+  } catch {
+    // ignore
   }
 });
 
